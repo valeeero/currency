@@ -10,7 +10,7 @@ from django.http import HttpResponse
 
 
 def hello_world(request):
-    return HttpResponse('Hello world')
+    return render(request, 'home.html')
 
 
 def generate_password(request):
@@ -21,22 +21,20 @@ def generate_password(request):
 
 def rate_list(request):
     rates = Rate.objects.all()
-    result = []
-    for rate in rates:
-        # breakpoint()
-        result.append(
-            f'ID: {rate.id} Sale: {rate.sale} Buy: {rate.buy}</br>'
-            f'ID: {rate}</br>'
-        )
-    return HttpResponse(str(result))
+    context = {
+        'rate_list': rates,
+    }
+    return render(request, 'rate_list.html', context=context)
 
 
 def contactas(request):
     contacts = ContactUs.objects.all()
-    result = []
-    for contact in contacts:
-        # breakpoint()
-        result.append(
-            f'contact: {contact}'
-        )
-    return HttpResponse(str(result))
+    context = {
+        'contact': contacts
+    }
+    return render(request, 'contact.html', context=context)
+
+
+def response_code(request):
+    response = HttpResponse('Status Code', status=200)
+    return response
