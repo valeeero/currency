@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404  # noqa
 
-from currency.models import ContactUs, Rate, Source # noqa
+from currency.models import ContactUs, Rate, Source  # noqa
 from currency.utils import generate_password as gen_pass
-from currency.forms import RateForm, SourceForm
+from currency.forms import RateForm, SourceForm # noqa
 
 from django.http import HttpResponse, HttpResponseRedirect
 
@@ -54,12 +54,14 @@ def rate_create(request):
     }
     return render(request, 'rate_create.html', context=context)
 
+
 def rate_details(request, rate_id):
     rate = Rate.objects.get(id=rate_id)
     context = {
         'object': rate,
     }
     return render(request, 'rate_details.html', context=context)
+
 
 def rate_update(request, rate_id):
     rate = get_object_or_404(Rate, id=rate_id)
@@ -76,6 +78,7 @@ def rate_update(request, rate_id):
     }
     return render(request, 'rate_update.html', context=context)
 
+
 def rate_delete(request, rate_id):
     rate = get_object_or_404(Rate, id=rate_id)
 
@@ -89,12 +92,14 @@ def rate_delete(request, rate_id):
 
     return render(request, 'rate_delete.html', context=context)
 
+
 def sources(request):
     sources = Source.objects.all()
     context = {
         'sources': sources,
     }
     return render(request, 'source.html', context=context)
+
 
 def source_create(request):
     if request.method == 'POST':
@@ -109,12 +114,14 @@ def source_create(request):
     }
     return render(request, 'source_create.html', context=context)
 
+
 def source_details(request, source_id):
     source = Source.objects.get(id=source_id)
     context = {
         'set': source,
     }
     return render(request, 'source_details.html', context=context)
+
 
 def source_update(request, source_id):
     source = get_object_or_404(Source, id=source_id)
@@ -131,6 +138,7 @@ def source_update(request, source_id):
     }
     return render(request, 'source_update.html', context=context)
 
+
 def source_delete(request, source_id):
     source = get_object_or_404(Source, id=source_id)
 
@@ -143,11 +151,3 @@ def source_delete(request, source_id):
     }
 
     return render(request, 'source_delete.html', context=context)
-
-#
-# def source(request):
-#     sources = Source.objects.all()
-#     context = {
-#         'source': sources,
-#     }
-#     return render(request, 'rate_list.html', context=context)

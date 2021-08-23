@@ -1,6 +1,6 @@
 from django import forms
 
-from currency.models import Rate, Source
+from currency.models import Rate, Source # noqa
 
 
 class RateForm(forms.ModelForm):
@@ -12,6 +12,7 @@ class RateForm(forms.ModelForm):
             'source',
             'type',
         )
+
 
 class SourceForm(forms.ModelForm):
     class Meta:

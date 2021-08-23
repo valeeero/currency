@@ -1,5 +1,4 @@
 from django.db import models
-import string
 
 
 class Rate(models.Model):

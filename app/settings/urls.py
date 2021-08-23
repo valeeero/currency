@@ -1,9 +1,10 @@
 from currency.views import (
-    contactas, generate_password,
-    hello_world, rate_list, rate_create,
-    rate_details, rate_update, rate_delete, source_create,
-    sources, source_update, source_details, source_delete
+    contactas, generate_password, hello_world,
+    rate_create, rate_delete, rate_details, rate_list,
+    rate_update, source_create, source_delete,
+    source_details, source_update, sources
 )
+
 
 from django.contrib import admin
 from django.urls import path
