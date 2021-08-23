@@ -9,5 +9,5 @@ urlpatterns = [
     path('', hello_world),
     path('gen-pass/', generate_password),
     path('rate/list/', rate_list),
-    path('contact', contactas),
+    path('contact/', contactas),
 ]
