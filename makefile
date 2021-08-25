@@ -10,3 +10,6 @@ makemigrations:
 
 migrate:
 	$(manage_py) migrate
+
+makemigrations:
+	$(manage_py) makemigrations
