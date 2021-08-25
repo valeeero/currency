@@ -2,7 +2,9 @@
 
 {% block main_content %}
 {% for contact in contacts %}
+
     <table>
+        <caption>Contacts</caption>
         <tr>
             <td>ID: {{ contact.id }}</td>
             <td>Email: {{ contact.email_from }}</td>
