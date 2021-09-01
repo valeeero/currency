@@ -4,8 +4,8 @@
 
 Details <br>
 
-Id: {{ set.id }}<br>
-URL: {{ set.source_url }}<br>
-NAME: {{ set.name }}<br>
+Id: {{ source.id }}<br>
+URL: <a href="{{ source.source_url }}"><button>Go to {{ source.name }}</button></a><br><br>
+NAME: {{ source.name }}<br>
 
 {% endblock %}

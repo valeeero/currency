@@ -1,29 +1,33 @@
 from currency.views import (
-    contactas, generate_password, hello_world,
-    rate_create, rate_delete, rate_details, rate_list,
-    rate_update, source_create, source_delete,
-    source_details, source_update, sources
+    RateCreateView, RateDeleteView, RateDetailView,
+    RateListView, RateUpdateView, SourceCreateView,
+    SourceDeleteView, SourceDetailView, SourceListView,
+    SourceUpdateView, contactas, generate_password, hello_world
 )
 
+import debug_toolbar
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 
 urlpatterns = [
+    path('__debug__/', include(debug_toolbar.urls)),
     path('admin/', admin.site.urls),
 
     path('', hello_world),
     path('gen-pass/', generate_password),
-    path('rate/list/', rate_list),
     path('contact/', contactas),
-    path('rate/create/', rate_create),
-    path('rate/details/<int:rate_id>/', rate_details),
-    path('rate/update/<int:rate_id>/', rate_update),
-    path('rate/delete/<int:rate_id>/', rate_delete),
-    path('source/', sources),
-    path('source/create/', source_create),
-    path('source/update/<int:source_id>/', source_update),
-    path('source/details/<int:source_id>/', source_details),
-    path('source/delete/<int:source_id>/', source_delete),
+
+    path('currency/rate/list/', RateListView.as_view(), name='rate-list'),
+    path('currency/rate/create/', RateCreateView.as_view(), name='rate-create'),
+    path('currency/rate/details/<int:pk>/', RateDetailView.as_view(), name='rate-details'),
+    path('currency/rate/update/<int:pk>/', RateUpdateView.as_view(), name='rate-update'),
+    path('currency/rate/delete/<int:pk>/', RateDeleteView.as_view(), name='rate-delete'),
+
+    path('source/', SourceListView.as_view(), name='source-list'),
+    path('source/create/', SourceCreateView.as_view(), name='source-create'),
+    path('source/details/<int:pk>/', SourceDetailView.as_view(), name='source-details'),
+    path('source/update/<int:pk>/', SourceUpdateView.as_view(), name='source-update'),
+    path('source/delete/<int:pk>/', SourceDeleteView.as_view(), name='source-delete'),
 
 ]
