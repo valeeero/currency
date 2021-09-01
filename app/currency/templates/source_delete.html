@@ -2,13 +2,13 @@
 
 {% block main_content %}
 
-Delete this object?: ( {{ set.name }} )
+Delete this object?: ( {{ source.name }} )
 
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Delete</button>
 </form>
-<a href="/source/"><button type="submit">NO!</button></a>
+<a href="{% url 'source-list' %}"><button type="submit">NO!</button></a>
 
 {% endblock %}
