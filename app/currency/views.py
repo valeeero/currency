@@ -1,13 +1,13 @@
 from django.shortcuts import render, get_object_or_404  # noqa
-
 from currency.models import ContactUs, Rate, Source  # noqa
 from currency.utils import generate_password as gen_pass
 from currency.forms import RateForm, SourceForm  # noqa
 
+from django.conf import settings
+from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
-
 
 # Create your views here.
 
@@ -82,7 +82,7 @@ def generate_password(request):
     return HttpResponse(password)
 
 
-def contactas(request):
+def contactus(request):
     contacts = ContactUs.objects.all()
     context = {
         'contact': contacts,
@@ -93,3 +93,34 @@ def contactas(request):
 def response_code(request):
     response = HttpResponse('Status Code', status=200)
     return response
+
+
+class ContactUsCreateView(CreateView):
+    model = ContactUs
+    success_url = reverse_lazy('index')
+    template_name = 'contactus_create.html'
+    fields = (
+        'email_from',
+        'subject',
+        'message',
+    )
+
+    def form_valid(self, form):
+        subject = form.cleaned_data['subject']
+        message = form.cleaned_data['message']
+        email_from = form.cleaned_data['email_from']
+
+        full_email_body = f'''
+        Email from: {email_from}
+        Message: {message}
+        '''
+
+        send_mail(
+            subject,
+            full_email_body,
+            settings.EMAIL_HOST_USER,
+            [settings.SUPPORT_EMAIL],
+            fail_silently=False,
+        )
+
+        return super().form_valid(form)
