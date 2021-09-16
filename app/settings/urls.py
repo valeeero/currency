@@ -1,8 +1,9 @@
 from currency.views import (
-    RateCreateView, RateDeleteView, RateDetailView,
-    RateListView, RateUpdateView, SourceCreateView,
-    SourceDeleteView, SourceDetailView, SourceListView,
-    SourceUpdateView, contactas, generate_password, hello_world
+    ContactUsCreateView, RateCreateView, RateDeleteView,
+    RateDetailView, RateListView, RateUpdateView,
+    SourceCreateView, SourceDeleteView, SourceDetailView,
+    SourceListView, SourceUpdateView, contactus,
+    generate_password, hello_world
 )
 
 import debug_toolbar
@@ -14,9 +15,9 @@ urlpatterns = [
     path('__debug__/', include(debug_toolbar.urls)),
     path('admin/', admin.site.urls),
 
-    path('', hello_world),
+    path('', hello_world, name='index'),
     path('gen-pass/', generate_password),
-    path('contact/', contactas),
+    path('contact/', contactus, name='contactus'),
 
     path('currency/rate/list/', RateListView.as_view(), name='rate-list'),
     path('currency/rate/create/', RateCreateView.as_view(), name='rate-create'),
@@ -29,5 +30,7 @@ urlpatterns = [
     path('source/details/<int:pk>/', SourceDetailView.as_view(), name='source-details'),
     path('source/update/<int:pk>/', SourceUpdateView.as_view(), name='source-update'),
     path('source/delete/<int:pk>/', SourceDeleteView.as_view(), name='source-delete'),
+
+    path('contactus/create/', ContactUsCreateView.as_view(), name='contactus-create'),
 
 ]

@@ -1,15 +1,17 @@
 {% extends 'base.html' %}
 
 {% block main_content %}
-{% for contact in contacts %}
+{% for contact in contactus %}
+
+<a href="{% url 'contactus-create' %}"><button>Create Contact Us</button></a><br>
 
     <table>
-        <caption>Contacts</caption>
+        <caption>ContactUs</caption>
         <tr>
             <td>ID: {{ contact.id }}</td>
             <td>Email: {{ contact.email_from }}</td>
-            <td>Subject: {{ rate.subject }}</td>
-            <td>Message {{ rate.message }}</td>
+            <td>Subject: {{ contact.subject }}</td>
+            <td>Message {{ contact.message }}</td>
 
         </tr>
     </table>
