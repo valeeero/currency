@@ -12,4 +12,8 @@ migrate:
 	$(manage_py) migrate
 
 shell:
-	$(manage_py) shell_plus
+	$(manage_py) shell_plus --print-sql
+
+worker:
+	cd app && celery -A settings worker -l info --autoscale=10,2
+

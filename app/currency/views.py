@@ -2,9 +2,8 @@ from django.shortcuts import render, get_object_or_404  # noqa
 from currency.models import ContactUs, Rate, Source  # noqa
 from currency.utils import generate_password as gen_pass
 from currency.forms import RateForm, SourceForm  # noqa
+from currency.tasks import contact_us
 
-from django.conf import settings
-from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
@@ -111,16 +110,9 @@ class ContactUsCreateView(CreateView):
         email_from = form.cleaned_data['email_from']
 
         full_email_body = f'''
-        Email from: {email_from}
+        Hello {email_from}
         Message: {message}
         '''
-
-        send_mail(
-            subject,
-            full_email_body,
-            settings.EMAIL_HOST_USER,
-            [settings.SUPPORT_EMAIL],
-            fail_silently=False,
-        )
+        contact_us.apply_async(args=(subject, ), kwargs={'full_email_body': full_email_body})
 
         return super().form_valid(form)
