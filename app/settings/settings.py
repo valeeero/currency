@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,10 +29,13 @@ INSTALLED_APPS = [
     'django_extensions',
     'debug_toolbar',
     'currency',
+    'silk',
 
 ]
 
 MIDDLEWARE = [
+
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -39,8 +43,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'silk.middleware.SilkyMiddleware',
+
+    'currency.middlewares.ResponseTimeMiddleware',
 ]
+
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_in_env")
 
 ROOT_URLCONF = 'settings.urls'
 
@@ -125,11 +134,5 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'pythontest975@gmail.com'
 EMAIL_HOST_PASSWORD = 'Python975test'
 SUPPORT_EMAIL = 'pythontest975@gmail.com'
-# EMAIL_BACKEND = ‘django.core.mail.backends.smtp.EmailBackend’
-# EMAIL_HOST = ‘’
-# EMAIL_USE_TLS = True
-# EMAIL_PORT = 587
-# EMAIL_HOST_USER = ‘your_account@gmail.com’
-# EMAIL_HOST_PASSWORD = ‘your account’s password’
 
 CELERY_BROKER_URL = 'amqp://localhost'

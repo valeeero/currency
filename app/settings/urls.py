@@ -8,6 +8,7 @@ from currency.views import (
 
 import debug_toolbar
 
+from django.conf.urls import url
 from django.contrib import admin
 from django.urls import include, path
 
@@ -32,5 +33,7 @@ urlpatterns = [
     path('source/delete/<int:pk>/', SourceDeleteView.as_view(), name='source-delete'),
 
     path('contactus/create/', ContactUsCreateView.as_view(), name='contactus-create'),
+    url(r'^admin/', admin.site.urls),
+    url(r'^silk/', include('silk.urls', namespace='silk')),
 
 ]
