@@ -1,4 +1,4 @@
-from currency.models import ContactUs, Rate, Source
+from currency.models import ContactUs, Rate, ResponseLog, Source
 from django.contrib import admin  # noqa
 
 
@@ -54,6 +54,18 @@ class SourceAdmin(admin.ModelAdmin):
     )
 
 
+class ResponseLogAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'created',
+        'status_code',
+        'path',
+        'response_time',
+        'request_method',
+    )
+
+
 admin.site.register(Rate, RateAdmin)
 admin.site.register(ContactUs, ContactUsAdmin)
 admin.site.register(Source, SourceAdmin)
+admin.site.register(ResponseLog, ResponseLogAdmin)

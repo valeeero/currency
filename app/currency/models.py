@@ -1,3 +1,5 @@
+from currency import model_choises as mch
+
 from django.db import models
 
 
@@ -6,7 +8,7 @@ class Rate(models.Model):
     buy = models.DecimalField(max_digits=5, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True)
     source = models.CharField(max_length=32)  # examples: privatbank, monobank
-    type = models.CharField(max_length=3)  # noqa
+    type = models.CharField(max_length=3, choices=mch.RATE_TYPES)  # noqa
 
 
 class ContactUs(models.Model):
@@ -18,3 +20,13 @@ class ContactUs(models.Model):
 class Source(models.Model):
     source_url = models.URLField(max_length=255)
     name = models.CharField(max_length=64)
+
+
+class ResponseLog(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    status_code = models.PositiveSmallIntegerField()
+    path = models.CharField(max_length=255)
+    response_time = models.PositiveSmallIntegerField(
+        help_text='in milliseconds.'
+    )
+    request_method = models.CharField(max_length=4, choices=mch.METHODS)

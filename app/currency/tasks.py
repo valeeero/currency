@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 
 from celery import shared_task
 
+from currency import model_choises as mch
 from currency.models import Rate
 
 from django.conf import settings
@@ -19,9 +20,9 @@ def round_currency(num):
 def currency_codes(args):
     currency_type = ()
     if args == 840:
-        currency_type = 'USD'
+        currency_type = mch.TYPE_USD
     elif args == 978:
-        currency_type = 'EUR'
+        currency_type = mch.TYPE_EUR
     return currency_type
 
 
@@ -43,7 +44,7 @@ def contact_us(subject, full_email_body):
 
 
 @shared_task
-def parce_privatbank():
+def parse_privatbank():
 
     privatbank_currency_url = 'https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5'
     response = requests.get(privatbank_currency_url)
@@ -52,16 +53,20 @@ def parce_privatbank():
 
     rates = response.json()
     source = 'PrivatBank'
-    available_currency_types = ('USD', 'EUR')
+    available_currency_types = {
+        'USD': mch.TYPE_USD,
+        'EUR': mch.TYPE_EUR,
+    }
 
     for rate in rates:
         currency_type = rate['ccy']
         if currency_type in available_currency_types:
             sale = round_currency(rate['sale'])
             buy = round_currency(rate['buy'])
+            ct = available_currency_types[currency_type]
 
             last_rate = Rate.objects.filter(
-                type=currency_type,
+                type=ct,
                 source=source,
             ).order_by('created').last()
 
@@ -71,7 +76,7 @@ def parce_privatbank():
                     last_rate.buy != buy
             ):
                 Rate.objects.create(
-                    type=currency_type,
+                    type=ct,
                     sale=sale,
                     buy=buy,
                     source=source,
@@ -79,7 +84,7 @@ def parce_privatbank():
 
 
 @shared_task
-def parce_monobank():
+def parse_monobank():
 
     mono_currency_url = 'https://api.monobank.ua/bank/currency'
     response = requests.get(mono_currency_url)
@@ -122,7 +127,7 @@ def parce_monobank():
 
 
 @shared_task
-def parce_vkurse():
+def parse_vkurse():
 
     vkurse_currency_url = 'http://vkurse.dp.ua/course.json'
     response = requests.get(vkurse_currency_url)
@@ -138,11 +143,11 @@ def parce_vkurse():
         buy = rates[rate]['buy']
 
         if rate == 'Dollar':
-            type_currency = 'USD'
+            type_currency = mch.TYPE_USD
         elif rate == 'Euro':
-            type_currency = 'EUR'
+            type_currency = mch.TYPE_EUR
         elif rate == 'Rub':
-            type_currency = 'RUB'
+            type_currency = mch.TYPE_RUB
 
         last_rate = Rate.objects.filter(
             type=type_currency,
@@ -164,7 +169,7 @@ def parce_vkurse():
 
 
 @shared_task
-def parce_alfa():
+def parse_alfa():
 
     currency_url = 'https://alfabank.ua/ru'
     source = 'AlfaBank'
@@ -173,9 +178,6 @@ def parce_alfa():
 
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    type_currency_usd = soup.find_all('div', {'class': 'title'})[0].text.strip()
-    type_currency_eur = soup.find_all('div', {'class': 'title'})[1].text.strip()
-
     eur_buy = soup.find('span', {'data-currency': 'EUR_BUY'}).text.strip()
     eur_sale = soup.find('span', {'data-currency': 'EUR_SALE'}).text.strip()
     usd_buy = soup.find('span', {'data-currency': 'USD_BUY'}).text.strip()
@@ -183,7 +185,7 @@ def parce_alfa():
 
     # =========USD========
     last_rate = Rate.objects.filter(
-        type=type_currency_usd,
+        type=mch.TYPE_USD,
         source=source,
     ).order_by('created').last()
 
@@ -194,14 +196,14 @@ def parce_alfa():
     ):
 
         Rate.objects.create(
-            type=type_currency_usd,
+            type=mch.TYPE_USD,
             sale=usd_sale,
             buy=usd_buy,
             source=source,
         )
     # =========EUR========
     last_rate = Rate.objects.filter(
-        type=type_currency_eur,
+        type=mch.TYPE_EUR,
         source=source,
     ).order_by('created').last()
 
@@ -211,7 +213,7 @@ def parce_alfa():
             last_rate.buy != round_currency(eur_buy)
     ):
         Rate.objects.create(
-            type=type_currency_eur,
+            type=mch.TYPE_EUR,
             sale=eur_sale,
             buy=eur_buy,
             source=source,
@@ -219,7 +221,7 @@ def parce_alfa():
 
 
 @shared_task
-def parce_oshad():
+def parse_oshad():
 
     currency_url = 'https://www.oschadbank.ua/currency-rate'
     source = 'OshadBank'
@@ -228,9 +230,8 @@ def parce_oshad():
 
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    type_currency_usd = soup.find_all("span", {
-        "class": "heading-block-currency-rate__table-txt body-regular"
-    })[7].get_text()
+    type_eur = mch.TYPE_EUR
+    type_usd = mch.TYPE_USD
 
     usd_buy = round_currency(soup.find_all("span", {
         "class": "heading-block-currency-rate__table-txt body-regular"
@@ -241,7 +242,7 @@ def parce_oshad():
     })[10].get_text())
 
     last_rate = Rate.objects.filter(
-        type=type_currency_usd,
+        type=type_usd,
         source=source,
     ).order_by('created').last()
 
@@ -251,15 +252,12 @@ def parce_oshad():
             last_rate.buy != usd_buy
     ):
         Rate.objects.create(
-            type=type_currency_usd,
+            type=type_usd,
             sale=usd_sale,
             buy=usd_buy,
             source=source,
         )
 
-    type_currency_eur = soup.find_all("span", {
-        "class": "heading-block-currency-rate__table-txt body-regular"
-    })[13].get_text()
     eur_buy = round_currency(soup.find_all("span", {
         "class": "heading-block-currency-rate__table-txt body-regular"
     })[15].get_text())
@@ -268,7 +266,7 @@ def parce_oshad():
     })[16].get_text())
 
     last_rate = Rate.objects.filter(
-        type=type_currency_eur,
+        type=type_eur,
         source=source,
     ).order_by('created').last()
 
@@ -278,7 +276,7 @@ def parce_oshad():
             last_rate.buy != eur_buy
     ):
         Rate.objects.create(
-            type=type_currency_eur,
+            type=type_eur,
             sale=eur_sale,
             buy=eur_buy,
             source=source,
@@ -286,7 +284,7 @@ def parce_oshad():
 
 
 @shared_task
-def parce_ukrgasbank():
+def parse_ukrgasbank():
 
     currency_url = 'https://www.ukrgasbank.com/kurs/'
     source = 'UkrGasBank'
@@ -301,7 +299,7 @@ def parce_ukrgasbank():
     eur_sale = round_currency(soup.find_all("td", {"class": "val"})[4].text)/100
 
     last_rate = Rate.objects.filter(
-        type='USD',
+        type=mch.TYPE_USD,
         source=source,
     ).order_by('created').last()
 
@@ -311,14 +309,14 @@ def parce_ukrgasbank():
             last_rate.buy != usd_buy
     ):
         Rate.objects.create(
-            type='USD',
+            type=mch.TYPE_USD,
             sale=usd_sale,
             buy=usd_buy,
             source=source,
         )
 
     last_rate = Rate.objects.filter(
-        type='EUR',
+        type=mch.TYPE_EUR,
         source=source,
     ).order_by('created').last()
 
@@ -328,7 +326,7 @@ def parce_ukrgasbank():
             last_rate.buy != eur_buy
     ):
         Rate.objects.create(
-            type='EUR',
+            type=mch.TYPE_EUR,
             sale=eur_sale,
             buy=eur_buy,
             source=source,
