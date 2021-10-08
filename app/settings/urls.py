@@ -15,6 +15,19 @@ from django.urls import include, path
 urlpatterns = [
     path('__debug__/', include(debug_toolbar.urls)),
     path('admin/', admin.site.urls),
+    path('auth/', include('django.contrib.auth.urls')),
+
+# __debug__/
+# admin/
+# auth/ login/ [name='login']
+# auth/ logout/ [name='logout']
+# auth/ password_change/ [name='password_change']
+# auth/ password_change/done/ [name='password_change_done']
+# auth/ password_reset/ [name='password_reset']
+# auth/ password_reset/done/ [name='password_reset_done']
+# auth/ reset/<uidb64>/<token>/ [name='password_reset_confirm']
+# auth/ reset/done/ [name='password_reset_complete']
+
 
     path('', hello_world, name='index'),
     path('gen-pass/', generate_password),

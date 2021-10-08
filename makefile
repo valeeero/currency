@@ -17,3 +17,5 @@ shell:
 worker:
 	cd app && celery -A settings worker -l info --autoscale=10,2
 
+createsuperuser:
+	$(manage_py) createsuperuser
