@@ -3,6 +3,9 @@
 
 
     {% if request.user.is_authenticated %}
+        {{ request.user.email }}
+        {{ request.user.first_name }}
+        {{ request.user.last_name }}
         <div><a href="{% url 'logout' %}"><button>LogOut</button></a></div>
         <div><a href="{% url 'accounts:my-profile' %}"><button>My Profile</button></a></div>
     {% else %}

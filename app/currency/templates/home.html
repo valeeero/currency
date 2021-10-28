@@ -1,9 +1,9 @@
 {% include 'includes/navbar.html' %}
 {% if request.user.is_authenticated %}
-    <div><a href="{% url 'contactus-create' %}"><button>ContactUS</button></a></div>
-    <div><a href="{% url 'source-list' %}"><button>Bank</button></a></div>
+    <div><a href="{% url 'currency:contactus-create' %}"><button>ContactUS</button></a></div>
+    <div><a href="{% url 'currency:source-list' %}"><button>Bank</button></a></div>
 {% endif %}
-<div><a href="{% url 'rate-list' %}"><button>Rate - list</button></a></div>
+<div><a href="{% url 'currency:rate-list' %}"><button>Rate - list</button></a></div>
 
 
 

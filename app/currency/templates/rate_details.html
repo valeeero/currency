@@ -3,12 +3,14 @@
 {% block main_content %}
 
 Rate Details
-
-Id: {{ object.id }}<br>
-Buy: {{ object.buy }}<br>
-Sale: {{ object.sale }}<br>
-Create: {{ object.created }}<br>
-Source: {{ object.source }}<br>
-Type: {{ object.type }}<br>
-
+{% if request.user.is_authenticated %}
+    Id: {{ object.id }}<br>
+    Buy: {{ object.buy }}<br>
+    Sale: {{ object.sale }}<br>
+    Create: {{ object.created }}<br>
+    Source: {{ object.source }}<br>
+    Type: {{ object.type }}<br>
+{% else %}
+    You are not logged in and cannot view this page. Please <a href="{% url 'login' %}">login</a>!
+{% endif %}
 {% endblock %}
