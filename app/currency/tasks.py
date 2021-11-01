@@ -122,8 +122,6 @@ def parse_monobank():
                         buy=buy,
                         source=source,
                     )
-        else:
-            continue
 
 
 @shared_task

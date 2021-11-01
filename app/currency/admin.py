@@ -1,3 +1,5 @@
+from accounts.models import User
+
 from currency.models import ContactUs, Rate, ResponseLog, Source
 from django.contrib import admin  # noqa
 
@@ -65,7 +67,18 @@ class ResponseLogAdmin(admin.ModelAdmin):
     )
 
 
+class UserAdmin(admin.ModelAdmin):
+    list_display = (
+        'USERNAME_FIELD',
+        'REQUIRED_FIELDS',
+        'phone',
+        'email',
+        'id',
+    )
+
+
 admin.site.register(Rate, RateAdmin)
 admin.site.register(ContactUs, ContactUsAdmin)
 admin.site.register(Source, SourceAdmin)
 admin.site.register(ResponseLog, ResponseLogAdmin)
+admin.site.register(User, UserAdmin)

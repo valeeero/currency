@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block main_content %}
+
+Login
+
+<div><a href="{% url 'password_reset' %}"><button>password_reset</button></a></div>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+{% endblock %}
+{% include 'includes/footer.html' %}

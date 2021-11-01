@@ -1,6 +1,15 @@
 <div>
-    <a href="{% url 'index' %}"><button>Home</button></a></br>
-    <a href="#"><button>Login</button></a></br>
-    <a href="#"><button>SignUp</button></a></br>
-    <a href="#"><button>LogOut</button></a></br>
+    <div><a href="{% url 'index' %}"><button>Home</button></a></div>
+
+
+    {% if request.user.is_authenticated %}
+        {{ request.user.email }}
+        {{ request.user.first_name }}
+        {{ request.user.last_name }}
+        <div><a href="{% url 'logout' %}"><button>LogOut</button></a></div>
+        <div><a href="{% url 'accounts:my-profile' %}"><button>My Profile</button></a></div>
+    {% else %}
+        <div><a href="{% url 'login' %}"><button>Login</button></a></div>
+        <div><a href="#"><button>SignUp</button></a></div>
+    {% endif %}
 </div>

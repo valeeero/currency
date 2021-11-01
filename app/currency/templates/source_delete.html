@@ -9,6 +9,6 @@ Delete this object?: ( {{ source.name }} )
     {{ form.as_p }}
     <button type="submit">Delete</button>
 </form>
-<a href="{% url 'source-list' %}"><button type="submit">NO!</button></a>
+<a href="{% url 'currency:source-list' %}"><button type="submit">NO!</button></a>
 
 {% endblock %}
