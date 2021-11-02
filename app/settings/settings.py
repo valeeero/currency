@@ -19,8 +19,10 @@ ALLOWED_HOSTS = ['*']
 
 LOGIN_REDIRECT_URL = reverse_lazy('index')
 LOGOUT_REDIRECT_URL = reverse_lazy('index')
-
 # Application definition
+
+HTTP_SCHEMA = 'http'
+DOMAIN = '0:8000'
 
 INSTALLED_APPS = [
     'app',
