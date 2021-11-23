@@ -19,13 +19,13 @@ class RateListView(ListView):
 class RateCreateView(CreateView):
     queryset = Rate.objects.all()
     form_class = RateForm
-    success_url = reverse_lazy('rate-list')
+    success_url = reverse_lazy('currency:rate-list')
     template_name = 'rate_create.html'
 
 
 class RateDeleteView(DeleteView):
     queryset = Rate.objects.all()
-    success_url = reverse_lazy('rate-list')
+    success_url = reverse_lazy('currency:rate-list')
     template_name = 'rate_delete.html'
 
 
@@ -37,7 +37,7 @@ class RateDetailView(DetailView):
 class RateUpdateView(UpdateView):
     queryset = Rate.objects.all()
     form_class = RateForm
-    success_url = reverse_lazy('rate-list')
+    success_url = reverse_lazy('currency:rate-list')
     template_name = 'rate_update.html'
 
 
@@ -53,13 +53,13 @@ class SourceListView(ListView):
 class SourceCreateView(CreateView):
     queryset = Source.objects.all()
     form_class = SourceForm
-    success_url = reverse_lazy('source-list')
+    success_url = reverse_lazy('currency:source-list')
     template_name = 'source_create.html'
 
 
 class SourceDeleteView(DeleteView):
     queryset = Source.objects.all()
-    success_url = reverse_lazy('source-list')
+    success_url = reverse_lazy('currency:source-list')
     template_name = 'source_delete.html'
 
 
@@ -71,7 +71,7 @@ class SourceDetailView(DetailView):
 class SourceUpdateView(UpdateView):
     queryset = Source.objects.all()
     form_class = SourceForm
-    success_url = reverse_lazy('source-list')
+    success_url = reverse_lazy('currency:source-list')
     template_name = 'source_update.html'
 
 

@@ -20,6 +20,7 @@ class SourceForm(forms.ModelForm):
         fields = (
             'source_url',
             'name',
+            'logo',
         )
 #
 # last_rate = Rate.objects.filter(

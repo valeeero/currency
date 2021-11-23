@@ -1,19 +1,12 @@
-{% extends 'base.html' %}
-
+{% extends 'base.html' %}{% extends 'base.html' %}
 {% block main_content %}
-{% if user.is_superuser %}
 
-    Are you sure want to delete rate with id: {{ object.id }}?
+Are you sure want to delete rate with id: {{ object.id }}?
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Delete</button>
-    </form>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Delete</button>
+</form>
 
-{% else %}
-
-    No access to this feature.
-
-{% endif %}
 {% endblock %}

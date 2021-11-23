@@ -3,6 +3,10 @@ from currency import model_choises as mch
 from django.db import models
 
 
+def upload_logo(instance, filename):
+    return f'logo/{instance.id}/{filename}'
+
+
 class Rate(models.Model):
     sale = models.DecimalField(max_digits=5, decimal_places=2)
     buy = models.DecimalField(max_digits=5, decimal_places=2)
@@ -20,6 +24,12 @@ class ContactUs(models.Model):
 class Source(models.Model):
     source_url = models.URLField(max_length=255)
     name = models.CharField(max_length=64)
+    logo = models.FileField(
+        upload_to=upload_logo,
+        blank=True,
+        null=True,
+        default=None,
+    )
 
 
 class ResponseLog(models.Model):
