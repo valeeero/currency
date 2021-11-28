@@ -24,13 +24,14 @@ class Rate(models.Model):
     buy = models.DecimalField(max_digits=5, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True)
     source = models.ForeignKey(Source, on_delete=models.CASCADE)
-    type = models.CharField(
+    type = models.CharField(  # noqa
+
         max_length=3,
         choices=mch.RATE_TYPES,
         blank=False,
         null=False,
         default=mch.TYPE_USD,
-    )  # noqa
+    )
 
 
 class ContactUs(models.Model):

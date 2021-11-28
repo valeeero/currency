@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
+
 # Create your views here.
 
 
@@ -118,8 +119,6 @@ class ContactUsCreateView(CreateView):
         Hello {email_from}
         Message: {message}
         '''
-        contact_us.apply_async(args=(subject, ), kwargs={'full_email_body': full_email_body})
+        contact_us.apply_async(args=(subject,), kwargs={'full_email_body': full_email_body})
 
         return super().form_valid(form)
-
-
