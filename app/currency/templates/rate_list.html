@@ -1,24 +1,46 @@
 {% extends 'base.html' %}
-
 {% block main_content %}
-    <a href="{% url 'currency:rate-create' %}"><button>Create Rate</button></a><br>
-<caption>Currency</caption>
+
+<div class="row">
+    <div class="col-2" style="margin-left:20px;">
+        <a href="{% url 'currency:rate-create' %}"><button class="btn btn-success">Create Rate</button></a>
+    </div>
+</div><br>
 {% for rate in rate_list %}
-    <table>
-        <tr>
-            <td>ID: {{ rate.id }}</td>
-            <td>Sale: {{ rate.sale }}</td>
-            <td>Buy: {{ rate.buy }}</td>
-            <td>Created: {{ rate.created }}</td>
-            <td>Source: {{ rate.source }}</td>
-            <td>Type: {{ rate.get_type_display }}</td>
-        </tr>
+<div class="row" style="margin-left:20px;">
+    <div class="col-6">
+            <table class="table table-dark">
+                <tr>
+                    <td>ID: {{ rate.id }}</td>
+                    <td>Sale: {{ rate.sale }}</td>
+                    <td>Buy: {{ rate.buy }}</td>
+                    <td>Created: {{ rate.created }}</td>
+                    <td>Source: {{ rate.source }}</td>
+                    <td>Type: {{ rate.get_type_display }}</td>
+                </tr>
 
-    </table>
-<a href="{% url 'currency:rate-details' rate.pk %}"><button>Details</button></a>
-<a href="{% url 'currency:rate-update' rate.pk %}"><button>Update</button></a>
-<a href="{% url 'currency:rate-delete' rate.pk %}"><button>Delete</button></a>
-
+            </table>
+    </div>
+    <div class="col-6">
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+            Actions
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="{% url 'currency:rate-details' rate.pk %}">Details</a>
+            <a class="dropdown-item" href="{% url 'currency:rate-update' rate.pk %}">Update</a>
+              {% if user.is_superuser %}
+                <a class="dropdown-item" href="{% url 'currency:rate-delete' rate.pk %}">Delete</a>
+              {% endif %}
+          </div>
+        </div>
+    </div>
+</div>
+<!--    <a href="{% url 'currency:rate-details' rate.pk %}"><button>Details</button></a>-->
+<!--    <a href="{% url 'currency:rate-update' rate.pk %}"><button>Update</button></a>-->
+<!--        {% if user.is_superuser %}-->
+<!--            <a href="{% url 'currency:rate-delete' rate.pk %}"><button>Delete</button></a>-->
+<!--        {% endif %}-->
 {% endfor %}
 {% endblock %}
 

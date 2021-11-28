@@ -1,13 +1,20 @@
 {% extends 'base.html' %}
-
+{% load crispy_forms_tags %}
 {% block main_content %}
 
-Create RATE
+<div class="alert alert-info col-3" style="margin-left: 40px;">
+    Create RATE
+</div>
 
-<form method="post">
+<form class="row" method="post">
+
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Send To Django Server</button>
+    <div class="col-6" align="left" style="margin-left: 40px;">
+        {{ form|crispy }}
+        <button type="submit">Send To Django Server</button>
+    </div>
+
+
 </form>
 
 {% endblock %}

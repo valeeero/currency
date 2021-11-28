@@ -1,18 +1,24 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>currency</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 </head>
-<body>
 
 {% include 'includes/navbar.html' %}
-{% block main_content %}
-{% endblock %}
-{% include 'includes/footer.html' %}
 
+<body>
+    <div class="container-fluid">
+        {% block main_content %}
 
-
-
+        {% endblock %}
+    </div>
 </body>
+<footer class=" apage-footer font-small special-color-dark pt-4">
+    {% include 'includes/footer.html' %}
+</footer>
 </html>

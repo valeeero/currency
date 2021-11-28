@@ -1,13 +1,30 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+{% load static %}
+
 {% block main_content %}
 
-My Profile
 
-<form method="post">
+
+<form method="post" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
+    <div class="col-2 alert alert-success text-dark" role="alert">
+        My Profile
+    </div>
+    <div class="row">
+        <div class="col-6 alert alert-info text-dark" role="alert">
+            {% crispy form %}
+            <button class="btn btn-success" type="submit">Submit</button>
+        </div>
+        <div class="col-4" align="left">
+            {% if request.user.avatar %}
+                <img class="rounded-circle" src="{{ request.user.avatar.url }}" width="350">
+            {% else %}
+                <img class="rounded-circle" src="{% static 'images/anon_user_account.png' %}" width="350">
+            {% endif %}
+        </div>
+    </div>
 
+</form>
 {% endblock %}
-{% include 'includes/footer.html' %}
