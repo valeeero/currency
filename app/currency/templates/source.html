@@ -11,8 +11,8 @@
             <td>Name: {{ source.name }}</td>
         </tr>
         <div>
-            {% if request.source.logo.url %}
-                <img src="{{ request.source.logo.url }}" width="64">
+            {% if source.logo %}
+                <img src="{{ source.logo.url }}" width="64">
             {% else %}
                 <img src="{% static 'images/none_bank.jpg' %}" width="64">
             {% endif %}

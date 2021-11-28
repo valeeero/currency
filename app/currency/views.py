@@ -12,7 +12,7 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 
 
 class RateListView(ListView):
-    queryset = Rate.objects.all()
+    queryset = Rate.objects.all().select_related('source').order_by('-created')
     template_name = 'rate_list.html'
 
 
@@ -67,6 +67,11 @@ class SourceDetailView(DetailView):
     queryset = Source.objects.all()
     template_name = 'source_details.html'
 
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['rates'] = Rate.objects.filter(source=self.object)
+    #     return context
+
 
 class SourceUpdateView(UpdateView):
     queryset = Source.objects.all()
@@ -116,3 +121,5 @@ class ContactUsCreateView(CreateView):
         contact_us.apply_async(args=(subject, ), kwargs={'full_email_body': full_email_body})
 
         return super().form_valid(form)
+
+

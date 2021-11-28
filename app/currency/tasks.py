@@ -4,8 +4,9 @@ from bs4 import BeautifulSoup
 
 from celery import shared_task
 
+from currency import consts
 from currency import model_choises as mch
-from currency.models import Rate
+from currency.models import Rate, Source
 
 from django.conf import settings
 from django.core.mail import send_mail
@@ -52,7 +53,10 @@ def parse_privatbank():
     response.raise_for_status()
 
     rates = response.json()
-    source = 'PrivatBank'
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_PRIVATBANK,
+        defaults={'name':'PrivatBank'},
+    )[0]
     available_currency_types = {
         'USD': mch.TYPE_USD,
         'EUR': mch.TYPE_EUR,
@@ -92,7 +96,10 @@ def parse_monobank():
     response.raise_for_status()
 
     rates = response.json()
-    source = 'MonoBank'
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_MONOBANK,
+        defaults={'name': 'MonoBank'},
+    )[0]
     available_currency_types = (840, 978)   # 840 - USD, 978 - EUR
 
     for rate in rates:
