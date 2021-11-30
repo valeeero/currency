@@ -4,8 +4,9 @@ from bs4 import BeautifulSoup
 
 from celery import shared_task
 
+from currency import consts
 from currency import model_choises as mch
-from currency.models import Rate
+from currency.models import Rate, Source
 
 from django.conf import settings
 from django.core.mail import send_mail
@@ -45,14 +46,16 @@ def contact_us(subject, full_email_body):
 
 @shared_task
 def parse_privatbank():
-
     privatbank_currency_url = 'https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5'
     response = requests.get(privatbank_currency_url)
 
     response.raise_for_status()
 
     rates = response.json()
-    source = 'PrivatBank'
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_PRIVATBANK,
+        defaults={'name': 'PrivatBank'},
+    )[0]
     available_currency_types = {
         'USD': mch.TYPE_USD,
         'EUR': mch.TYPE_EUR,
@@ -85,22 +88,24 @@ def parse_privatbank():
 
 @shared_task
 def parse_monobank():
-
     mono_currency_url = 'https://api.monobank.ua/bank/currency'
     response = requests.get(mono_currency_url)
 
     response.raise_for_status()
 
     rates = response.json()
-    source = 'MonoBank'
-    available_currency_types = (840, 978)   # 840 - USD, 978 - EUR
+    source = Source.objects.get_or_create(
+        code_name=consts.CODE_NAME_MONOBANK,
+        defaults={'name': 'MonoBank'},
+    )[0]
+    available_currency_types = (840, 978)  # 840 - USD, 978 - EUR
 
     for rate in rates:
         currency_type_number = rate['currencyCodeA']
 
         currency_type_UAH = rate['currencyCodeB']
 
-        if currency_type_UAH == 980:    # 980 - UAH
+        if currency_type_UAH == 980:  # 980 - UAH
 
             if currency_type_number in available_currency_types:
                 sale = round_currency(rate['rateSell'])
@@ -126,7 +131,6 @@ def parse_monobank():
 
 @shared_task
 def parse_vkurse():
-
     vkurse_currency_url = 'http://vkurse.dp.ua/course.json'
     response = requests.get(vkurse_currency_url)
 
@@ -157,7 +161,6 @@ def parse_vkurse():
                 last_rate.sale != round_currency(sale) or
                 last_rate.buy != round_currency(buy)
         ):
-
             Rate.objects.create(
                 type=type_currency,
                 sale=sale,
@@ -168,7 +171,6 @@ def parse_vkurse():
 
 @shared_task
 def parse_alfa():
-
     currency_url = 'https://alfabank.ua/ru'
     source = 'AlfaBank'
     response = requests.get(currency_url)
@@ -192,7 +194,6 @@ def parse_alfa():
             last_rate.sale != round_currency(usd_sale) or
             last_rate.buy != round_currency(usd_buy)
     ):
-
         Rate.objects.create(
             type=mch.TYPE_USD,
             sale=usd_sale,
@@ -220,7 +221,6 @@ def parse_alfa():
 
 @shared_task
 def parse_oshad():
-
     currency_url = 'https://www.oschadbank.ua/currency-rate'
     source = 'OshadBank'
     response = requests.get(currency_url)
@@ -283,7 +283,6 @@ def parse_oshad():
 
 @shared_task
 def parse_ukrgasbank():
-
     currency_url = 'https://www.ukrgasbank.com/kurs/'
     source = 'UkrGasBank'
 
@@ -291,10 +290,10 @@ def parse_ukrgasbank():
     response.raise_for_status()
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    usd_buy = round_currency(soup.find_all("td", {"class": "val"})[0].text)/100
-    usd_sale = round_currency(soup.find_all("td", {"class": "val"})[1].text)/100
-    eur_buy = round_currency(soup.find_all("td", {"class": "val"})[3].text)/100
-    eur_sale = round_currency(soup.find_all("td", {"class": "val"})[4].text)/100
+    usd_buy = round_currency(soup.find_all("td", {"class": "val"})[0].text) / 100
+    usd_sale = round_currency(soup.find_all("td", {"class": "val"})[1].text) / 100
+    eur_buy = round_currency(soup.find_all("td", {"class": "val"})[3].text) / 100
+    eur_sale = round_currency(soup.find_all("td", {"class": "val"})[4].text) / 100
 
     last_rate = Rate.objects.filter(
         type=mch.TYPE_USD,
